@@ -1,6 +1,4 @@
 #include "parser.h"
-#include "linkedlist.h"
-#include "token.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -3,11 +3,15 @@
 
 #include <stdlib.h>
 
-int isEmpty(struct LinkedList* LL) { return (LL->Head->next == LL->Tail); }
+int isEmpty(struct LinkedList* LL) {
+    return (LL->Head->next == LL->Tail);
+}
 
 struct LinkedList* init(void) {
-    struct LinkedList* LL = (struct LinkedList*)malloc(sizeof(struct LinkedList));
-    if (!LL) return NULL;
+    struct LinkedList* LL =
+        (struct LinkedList*)malloc(sizeof(struct LinkedList));
+    if (!LL)
+        return NULL;
     // initialize head and tail
 
     LL->Head = (struct Node*)malloc(sizeof(struct Node));
@@ -39,7 +43,8 @@ void prepend(struct LinkedList* LL, Token data) {
 Token dequeue(struct LinkedList* LL) {
     Token t;
 
-    if (isEmpty(LL)) return (Token){ERROR, "EMPTY\0"};
+    if (isEmpty(LL))
+        return (Token){ERROR, "EMPTY\0"};
 
     struct Node* oldNode = LL->Head->next;
 

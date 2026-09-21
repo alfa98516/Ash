@@ -1,4 +1,6 @@
-
+#ifndef LINKED_LIST
+#define LINKED_LIST
+#include "token.h"
 struct Node {
     Token t;
     struct Node* next;
@@ -14,3 +16,4 @@ int isEmpty(struct LinkedList* LL);
 void prepend(struct LinkedList* LL, Token data);
 Token dequeue(struct LinkedList* LL);
 void del(struct LinkedList* LL);
+#endif
