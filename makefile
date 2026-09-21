@@ -1,6 +1,6 @@
 # sources 
 SRC    := $(filter-out testing.c, $(wildcard *.c))
-TESTSRC = testing.c parser.c
+TESTSRC = testing.c linkedlist.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 
