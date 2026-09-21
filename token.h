@@ -7,6 +7,8 @@
  * Sources used:
  *  IEEE Std 1003.1, 2004 POSIX Shell Standard (https://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html)
  *  The GNU Bash Manual (https://www.gnu.org/software/bash/manual/bash.html#Shell-Commands)
+ *  Official Yacc Grammar for Bash (https://cgit.git.savannah.gnu.org/cgit/bash.git/tree/parse.y)
+ *
  * Currently there is a very sparse definition for the grammer of the Bourne Again Shell, which sort of makes sense, since the only thing we need to comply 
  * with is the POSIX definiton of a shell.
  * The problem with the POSIX definition is that it is extremely limited, there are barely any proper conditions.
