@@ -1,0 +1,3 @@
+#ifndef LEXICAL_ANALYZER
+#define LEXICAL_ANALYZER
+#endif

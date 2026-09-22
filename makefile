@@ -1,6 +1,6 @@
 # sources 
-SRC    := $(filter-out testing.c, $(wildcard *.c))
-TESTSRC = testing.c linkedlist.c
+SRC     = main.c linkedlist/linkedlist.c parser/parser.c
+TESTSRC = testing.c linkedlist/linkedlist.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 
@@ -39,8 +39,9 @@ $(TARGETTEST): $(TESTOBJ) testing.o
 testing.o: testing.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+echo:
+	echo $(OBJ)
 
 clean:
 	rm -f $(OBJ) $(TESTOBJ) $(TARGET) $(TARGETTEST)
-
 .PHONY: all clean testing

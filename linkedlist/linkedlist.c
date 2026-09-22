@@ -1,5 +1,5 @@
 #include "linkedlist.h"
-#include "parser.h"
+#include "../parser/parser.h"
 
 #include <stdlib.h>
 
