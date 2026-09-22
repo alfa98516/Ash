@@ -6,7 +6,7 @@ TESTOBJ = $(TESTSRC:.c=.o)
 
 
 # target
-TARGET     = ashell
+TARGET     = ash
 TARGETTEST = test
 
 # cflags
