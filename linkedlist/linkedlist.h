@@ -1,6 +1,6 @@
 #ifndef LINKED_LIST
 #define LINKED_LIST
-#include "token.h"
+#include "../parser/token.h"
 struct Node {
     Token t;
     struct Node* next;
