@@ -1,3 +1,2 @@
-#!/bin/bash
-var1=${ls /}
-echo $var1
+testisngisngts23
+211234sadfasdf435

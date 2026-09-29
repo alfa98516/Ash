@@ -23,6 +23,7 @@
 typedef enum _TOKEN_ID {
     ERROR = 0,          // This will be the default token, might end up obsolete, but we
                         // will see.
+    EOI,
     WORD,               /* This will encompess variable declerations and variable expansions, 
                          * in this case, functions are variables.
                          */

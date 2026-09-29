@@ -1,7 +1,7 @@
 # sources 
-SRC     = main.c linkedlist/linkedlist.c parser/parser.c
-TESTSRC = testing.c linkedlist/linkedlist.c
-OBJ     = $(SRC:.c=.o)
+SRC     = main.c linkedlist/linkedlist.c parser/parser.c parser/lexer.c
+TESTSRC = testing.c linkedlist/linkedlist.c parser/lexer.c
+OBJ     = $(SRC:.=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 
 
@@ -11,7 +11,7 @@ TARGETTEST = test
 
 # cflags
 CC       = gcc
-STD      = -std=c2x
+STD      = -std=gnu2x
 WARN     = -Wpedantic
 DEBUG    = -g -DDEBUG
 LIBS     = -lutil

@@ -9,5 +9,4 @@ int main() {
     struct Lexer* lexer = initLexer(fd);
     char* id = identifier(lexer);
     printf("%s\n", id);
-    delLexer(lexer);
 }
