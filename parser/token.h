@@ -2,7 +2,7 @@
 #define TOKEN
 /* Copyright (c) 2026 Alfa Reynisdóttir. All Rights Reserved.
  *
- * 
+ *
  *
  */
 
@@ -26,16 +26,25 @@ typedef enum _TOKEN_ID {
     WORD,               /* This will encompess variable declerations and variable expansions, 
                          * in this case, functions are variables.
                          */
-    ASSIGNMENT_WORD,     
-    NUMBER,
+    ASSIGNMENT_WORD,    /* ASSIGNMENT_WORD is difined as anything of the form WORD=[VALUE] 
+                         * If it is of the form WORD, it is just a word.
+                         */
+ 
+    NUMBER,             // [1-9] [0-9]*
+    
     IO_NUMBER,          /* The POSIX Shell Standard defines a meaningful difference between normal
                          * integers and io numbers (file descriptors), from the POSIX Shell standard:
                          * "If the string consists solely of digits and the delimiter character is one of '<' or
-                         * '>', the token identifier IO_NUMBER shall be returned."
+                         * '>', the token identifier IO_NUMBER shall be returned." 
+                         * If we get regex of the form: "[0-9]?(?:>>|<<|>|<)&?[0-9]?" the numbers in it are io_numbers (file descriptors)
+                         *
                          */
+   
     // Operators.
     AND_IF,             // '&&'
     OR_IF,              // '||'
+    OR,                 // '|'
+    SEMI,               // ';'
     DSEMI,              // ';;'
     DLESS,              // '<<'
     TLESS,              // '<<<' NOT THIS BULLSHIT AGAIN
@@ -46,8 +55,12 @@ typedef enum _TOKEN_ID {
     DLESSDASH,          // '<<-' This ones gonna be a bitch
     CLOBBER,            // '>|'  Yes that is actually what the token is called
     DASH,               // '-'
-
-
+    PLUS,               // '+'
+    MUL,                // '*'
+    DIV,                // '/' Bash does not have floating point but it does have division, 
+                        //     it works like '//' in python
+    
+    
 
     /* Keywords.
      * In the POSIX Shell Standard, 
@@ -79,6 +92,8 @@ typedef enum _TOKEN_ID {
     RBRACE,             // '}'
     BANG,               // '!' Only grammer I've seen that calls it bang
     IN,                 // 'in'
+    
+
 } TokenId;
 // clang-format on
 #define MAX_ARG_NAME 255

@@ -4,7 +4,7 @@
 #include <string.h>
 
 int main() {
-    struct LinkedList* ll = init();
+    struct LinkedList* ll = initList();
     Token testToken1 = {.tokenId = ERROR, .lexeme = "HELLO1\0"};
     Token testToken2 = {.tokenId = ERROR, .lexeme = "HELLO2\0"};
     Token testToken3 = {.tokenId = ERROR, .lexeme = "HELLO3\0"};
@@ -21,5 +21,5 @@ int main() {
     printf("%s\n", retToken3.lexeme);
     Token retToken4 = dequeue(ll);
     printf("%s\n", retToken4.lexeme);
-    del(ll);
+    delList(ll);
 }

@@ -1,2 +1,3 @@
 #!/bin/bash
-ls
+var1=${ls /}
+echo $var1
