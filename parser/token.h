@@ -44,7 +44,7 @@ typedef enum _TOKEN_ID {
     // Operators.
     AND_IF,             // '&&'
     OR_IF,              // '||'
-    OR,                 // '|'
+    OR,                 // '|',
     SEMI,               // ';'
     DSEMI,              // ';;'
     DLESS,              // '<<'
