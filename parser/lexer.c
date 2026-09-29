@@ -17,6 +17,7 @@ struct Lexer* initLexer(const int fd) {
         }
         lexer->f = f;
     }
+    lexer->currentChar = getc(lexer->f);
     return lexer;
 }
 
@@ -44,18 +45,18 @@ int peekCharIs(struct Lexer* lexer, char c) {
  */
 char* identifier(struct Lexer* lexer) {
     if (!isalpha(lexer->currentChar))
-        exit(1); // HACK: make an actual error handler.
+        exit(3); // HACK: make an actual error handler.
 
     char* lexeme = malloc(MAX_ARG_NAME);
 
     int i = 0;                         // cry about it
-    while ((isalpha(peekChar(lexer)) ||
-            isdigit(peekChar(lexer)) &&
+    while ((isalpha(lexer->currentChar) ||
+            isdigit(lexer->currentChar) &&
                 (i < MAX_ARG_NAME))) { // need space for null terminator
-        nextChar(lexer);
 
         lexeme[i] = lexer->currentChar;
         i++;
+        nextChar(lexer);
     }
     lexeme[i] = '\0';
     return lexeme;

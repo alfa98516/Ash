@@ -44,6 +44,7 @@ test
 *.idb
 *.pdb
 testing/
+scripts/
 
 # Kernel Module Compile Results
 *.mod*
