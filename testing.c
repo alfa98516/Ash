@@ -2,7 +2,6 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int main() {
     int fd = open("/home/alfa/code/git/Ash/scripts/testing.sh", O_RDONLY);

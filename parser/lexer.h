@@ -1,6 +1,5 @@
 #ifndef LEXICAL_ANALYZER
 #define LEXICAL_ANALYZER
-#include "../linkedlist/linkedlist.h"
 #include "token.h"
 #include <stdarg.h>
 #include <stdio.h>

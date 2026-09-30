@@ -45,6 +45,7 @@ test
 *.pdb
 testing/
 scripts/
+depr/*
 
 # Kernel Module Compile Results
 *.mod*
