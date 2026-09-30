@@ -99,7 +99,7 @@ typedef enum _TOKEN_ID {
 } TokenId;
 // clang-format on
 #define MAX_ARG_NAME 255
-typedef struct {
+typedef struct _TOKEN {
     TokenId tokenId;
     char lexeme[MAX_ARG_NAME];
 } Token;

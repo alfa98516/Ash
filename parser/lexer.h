@@ -2,20 +2,20 @@
 #define LEXICAL_ANALYZER
 #include "../linkedlist/linkedlist.h"
 #include "token.h"
+#include <stdarg.h>
 #include <stdio.h>
-#define MAX_TOK                                                                                    \
-    2048 // gargantuan amount of tokens probably.
-         // Worst case MAX_ARG_NAME * MAX_TOK = 522,240 bytes = 5 Mb
-         // of memory for the tokens.
+#define MAX_TOK                                                                \
+    2048           // gargantuan amount of tokens probably.
+                   // Worst case MAX_ARG_NAME * MAX_TOK = 522,240 bytes = 5 Mb
+                   // of memory for the tokens.
 struct Lexer {
     char currentChar;
-    struct Node* current;      // will be used in the parser
-    struct LinkedList* Tokens; // actual pointer to the linked list, we fill this with our tokens
+    Token current; // will be used in the parser
     FILE* f;
 };
 
 struct pair {
-    char l;
+    char c;
     TokenId id;
 };
 
@@ -26,7 +26,7 @@ char peekChar(struct Lexer* lexer);
 int peekCharIs(struct Lexer* lexer, char c);
 char* identifier(struct Lexer* lexer);
 int whiteSpace(struct Lexer* lexer);
-void setToken(struct Lexer* lexer, TokenId Ti,
-              struct pair pairs[]); // probably not gonna make this function. (not yet at least)
+void setToken(struct Lexer* lexer, TokenId Ti, int nPairs,
+              ...); // probably not gonna make this function. (not yet at least)
 void delLexer(struct Lexer* lexer);
 #endif
