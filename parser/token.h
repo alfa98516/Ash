@@ -57,6 +57,7 @@ typedef enum _TOKEN_ID {
     CLOBBER,            // '>|'  Yes that is actually what the token is called
     DASH,               // '-'
     PLUS,               // '+'
+    INCR,               // '++'
     MUL,                // '*'
     DIV,                // '/' Bash does not have floating point but it does have division, 
                         //     it works like '//' in python
