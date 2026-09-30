@@ -1,6 +1,6 @@
 # sources 
 SRC     = main.c linkedlist/linkedlist.c parser/parser.c parser/lexer.c
-TESTSRC = testing.c parser/lexer.c
+TESTSRC = testing/testing.c parser/lexer.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 
@@ -33,10 +33,10 @@ $(TARGET): $(OBJ)
 # Intended for testing specific header files. 
 testing: $(TARGETTEST)
 
-$(TARGETTEST): $(TESTOBJ) testing.o
+$(TARGETTEST): $(TESTOBJ) 
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
-testing.o: testing.c
+testing.o: testing/testing.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 echo:
