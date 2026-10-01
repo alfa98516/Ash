@@ -8,9 +8,9 @@ int main() {
     int fd = open("/home/alfa/code/git/Ash/scripts/test", O_RDONLY);
     struct Lexer* lexer = initLexer(fd);
 
-    while (!peekCharIs(lexer, EOF)) {
+    while (lexer->current.tokenId != EOI) {
         nextToken(lexer);
-        printf("{lexeme: %s, TokenID: ", lexer->current.lexeme);
+        printf("{lexeme: '%s', TokenID: ", lexer->current.lexeme);
         switch (lexer->current.tokenId) {
 
         case ERROR:
@@ -49,11 +49,17 @@ int main() {
         case DSEMI:
             printf("DSEMI");
             break;
+        case LESS:
+            printf("LESS");
+            break;
         case DLESS:
             printf("DLESS");
             break;
         case TLESS:
             printf("TLESS");
+            break;
+        case GREAT:
+            printf("GREAT");
             break;
         case DGREAT:
             printf("DGREAT");
@@ -123,6 +129,18 @@ int main() {
             break;
         case FOR:
             printf("FOR");
+            break;
+        case LPAREN:
+            printf("LPAREN");
+            break;
+        case LDPAREN:
+            printf("LDPAREN");
+            break;
+        case RPAREN:
+            printf("RPAREN");
+            break;
+        case RDPAREN:
+            printf("RDPAREN");
             break;
         case LBRACKET:
             printf("LBRACKET");
