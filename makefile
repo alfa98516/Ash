@@ -1,6 +1,6 @@
 # sources 
 SRC     = main.c linkedlist/linkedlist.c parser/parser.c parser/lexer.c
-TESTSRC = testing/testing.c parser/lexer.c
+TESTSRC = testing/test_lexer.c parser/lexer.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 

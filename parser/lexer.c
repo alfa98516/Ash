@@ -1,12 +1,13 @@
 #include "lexer.h"
 #include "token.h"
 #include <ctype.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
-    if (!lexer)
-        return NULL;
+    if (!lexer) return NULL;
     if (fd == -1) {
         lexer->f = stdin;
     } else {
@@ -21,8 +22,7 @@ struct Lexer* initLexer(const int fd) {
 }
 
 void nextChar(struct Lexer* lexer) {
-    if (lexer->currentChar == EOF)
-        return;
+    if (lexer->currentChar == EOF) return;
     lexer->currentChar = getc(lexer->f);
 }
 
@@ -43,12 +43,11 @@ int peekCharIs(struct Lexer* lexer, char c) {
  * @brief: All of the form [a-zA-Z][a-zA-Z0-9]*
  */
 char* identifier(struct Lexer* lexer) {
-    if (!isalpha(lexer->currentChar))
-        exit(3); // HACK: make an actual error handler.
+    if (!isalpha(lexer->currentChar)) exit(3); // HACK: make an actual error handler.
 
     char* lexeme = malloc(MAX_ARG_NAME);
 
-    int i = 0;                   // cry about it
+    int i = 0; // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
            (i < MAX_ARG_NAME)) { // need space for null terminator
 
@@ -112,19 +111,64 @@ void nextToken(struct Lexer* lexer) {
 
     if (lexer->currentChar == EOF) {
         setToken(lexer, EOI, 0);
+        memcpy(lexer->current.lexeme, "EOI\0", 4);
         return;
     }
 
+    size_t length;
     switch (lexer->currentChar) {
+    case '&':
+        setToken(lexer, AND, 1, (struct pair){'&', AND_IF});
+        break;
+    case '|':
+        setToken(lexer, OR, 1, (struct pair){'|', OR_IF});
+        break;
     case '+':
-        if (peekCharIs(lexer, '+')) {
-            setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
+        setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
+        break;
+    case ';':
+        if (peekCharIs(lexer, ';')) {
+            setToken(lexer, SEMI, 1, (struct pair){';', DSEMI});
         } else {
-            setToken(lexer, PLUS, 0);
+            setToken(lexer, SEMI, 0);
         }
+        break;
+    case '<':
+        lexer->current.tokenId = LESS;
+        memcpy(lexer->current.lexeme, "<\0", 2);
+        length = 1;
+        nextChar(lexer);
+        if (lexer->currentChar == '<') {
+            lexer->current.tokenId = DLESS;
+            memcpy(lexer->current.lexeme + length, "<\0", 2);
+            length++;
+            nextChar(lexer);
+            if (lexer->currentChar == '<') {
+                lexer->current.tokenId = TLESS;
+                memcpy(lexer->current.lexeme + length, "<\0", 2);
+                length++;
+            } else if (lexer->currentChar == '-') {
+                lexer->current.tokenId = DLESSDASH;
+                memcpy(lexer->current.lexeme + length, "-\0", 2);
+                length++;
+            }
+        } else if (lexer->currentChar == '>') {
+            lexer->current.tokenId = LESSGREAT;
+            memcpy(lexer->current.lexeme + length, ">\0", 2);
+            length++;
+        } else if (lexer->currentChar == '&') {
+            lexer->current.tokenId = LESSAND;
+            memcpy(lexer->current.lexeme + length, "&\0", 2);
+            length++;
+        }
+        nextChar(lexer);
+        break;
+    case '>':
+        if (peekCharIs(lexer, '>')) {
+            setToken(lexer, GREAT, 1, (struct pair){})
+        }
+        break;
     }
 }
 
-void delLexer(struct Lexer* lexer) {
-    free(lexer);
-}
+void delLexer(struct Lexer* lexer) { free(lexer); }
