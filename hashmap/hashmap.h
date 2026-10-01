@@ -8,7 +8,8 @@ struct HashMap {
     size_t capacity;
 };
 struct HashMap* initHashMap();
-Token find(char* t);
-int hash(char* t);
-
+Token find(char* l);
+int hash(char* l);
+void update(char* l, Token t);
+Node* remove(char* l);
 #endif
