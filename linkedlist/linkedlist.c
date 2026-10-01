@@ -2,12 +2,17 @@
 #include "../parser/parser.h"
 
 #include <stdlib.h>
+#include <string.h>
 
-int isEmpty(struct LinkedList* LL) { return (LL->Head->next == LL->Tail); }
+int isEmpty(struct LinkedList* LL) {
+    return (LL->Head->next == LL->Tail);
+}
 
 struct LinkedList* initList(void) {
-    struct LinkedList* LL = (struct LinkedList*)malloc(sizeof(struct LinkedList));
-    if (!LL) return NULL;
+    struct LinkedList* LL =
+        (struct LinkedList*)malloc(sizeof(struct LinkedList));
+    if (!LL)
+        return NULL;
     // initialize head and tail
 
     LL->Head = (struct Node*)malloc(sizeof(struct Node));
@@ -39,7 +44,8 @@ void prepend(struct LinkedList* LL, Token data) {
 Token dequeue(struct LinkedList* LL) {
     Token t;
 
-    if (isEmpty(LL)) return (Token){ERROR, "EMPTY\0"};
+    if (isEmpty(LL))
+        return (Token){ERROR, "EMPTY\0"};
 
     struct Node* oldNode = LL->Head->next;
 
@@ -62,4 +68,14 @@ void delList(struct LinkedList* LL) {
 
     free(LL->Head);
     free(LL);
+}
+
+Token find(struct LinkedList* LL, char* t) {
+    struct Node* curr = LL->Head;
+    while (curr != NULL) {
+        if (strcmp(curr->t.lexeme, t)) {
+            return curr->t;
+        }
+    }
+    return (struct _TOKEN){ERROR, "ERROR\0"};
 }
