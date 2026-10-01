@@ -42,6 +42,7 @@ typedef enum _TOKEN_ID {
                          */
    
     // Operators.
+    AND,                // '&'
     AND_IF,             // '&&'
     OR_IF,              // '||'
     OR,                 // '|',
@@ -50,12 +51,13 @@ typedef enum _TOKEN_ID {
     DLESS,              // '<<'
     TLESS,              // '<<<' NOT THIS BULLSHIT AGAIN
     DGREAT,             // '>>'
-    LESSND,             // '<&'
+    LESSAND,             // '<&'
     GREATAND,           // '>&'
     LESSGREAT,          // '<>'
     DLESSDASH,          // '<<-' This ones gonna be a bitch
     CLOBBER,            // '>|'  Yes that is actually what the token is called
     DASH,               // '-'
+    DECR,               // 'DECR'
     PLUS,               // '+'
     INCR,               // '++'
     MUL,                // '*'

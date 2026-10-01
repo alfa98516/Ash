@@ -43,7 +43,6 @@ test
 *.su
 *.idb
 *.pdb
-testing/
 scripts/
 depr/*
 

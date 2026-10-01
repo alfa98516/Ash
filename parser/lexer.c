@@ -5,8 +5,7 @@
 #include <stdlib.h>
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
-    if (!lexer)
-        return NULL;
+    if (!lexer) return NULL;
     if (fd == -1) {
         lexer->f = stdin;
     } else {
@@ -21,8 +20,7 @@ struct Lexer* initLexer(const int fd) {
 }
 
 void nextChar(struct Lexer* lexer) {
-    if (lexer->currentChar == EOF)
-        return;
+    if (lexer->currentChar == EOF) return;
     lexer->currentChar = getc(lexer->f);
 }
 
@@ -43,12 +41,11 @@ int peekCharIs(struct Lexer* lexer, char c) {
  * @brief: All of the form [a-zA-Z][a-zA-Z0-9]*
  */
 char* identifier(struct Lexer* lexer) {
-    if (!isalpha(lexer->currentChar))
-        exit(3); // HACK: make an actual error handler.
+    if (!isalpha(lexer->currentChar)) exit(3); // HACK: make an actual error handler.
 
     char* lexeme = malloc(MAX_ARG_NAME);
 
-    int i = 0;                   // cry about it
+    int i = 0; // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
            (i < MAX_ARG_NAME)) { // need space for null terminator
 
@@ -116,15 +113,22 @@ void nextToken(struct Lexer* lexer) {
     }
 
     switch (lexer->currentChar) {
+    case '&':
+        if (peekCharIs(lexer, '&')) {
+            setToken(lexer, AND, 1, (struct pair){'&', AND_IF});
+        } else {
+            setToken(lexer, AND, 0);
+        }
+        break;
     case '+':
         if (peekCharIs(lexer, '+')) {
             setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
         } else {
             setToken(lexer, PLUS, 0);
         }
+        break;
+    case '-':
     }
 }
 
-void delLexer(struct Lexer* lexer) {
-    free(lexer);
-}
+void delLexer(struct Lexer* lexer) { free(lexer); }
