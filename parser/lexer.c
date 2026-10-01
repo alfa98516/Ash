@@ -1,8 +1,10 @@
 #include "lexer.h"
 #include "token.h"
 #include <ctype.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
     if (!lexer) return NULL;
@@ -109,25 +111,63 @@ void nextToken(struct Lexer* lexer) {
 
     if (lexer->currentChar == EOF) {
         setToken(lexer, EOI, 0);
+        memcpy(lexer->current.lexeme, "EOI\0", 4);
         return;
     }
 
+    size_t length;
     switch (lexer->currentChar) {
     case '&':
-        if (peekCharIs(lexer, '&')) {
-            setToken(lexer, AND, 1, (struct pair){'&', AND_IF});
-        } else {
-            setToken(lexer, AND, 0);
-        }
+        setToken(lexer, AND, 1, (struct pair){'&', AND_IF});
+        break;
+    case '|':
+        setToken(lexer, OR, 1, (struct pair){'|', OR_IF});
         break;
     case '+':
-        if (peekCharIs(lexer, '+')) {
-            setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
+        setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
+        break;
+    case ';':
+        if (peekCharIs(lexer, ';')) {
+            setToken(lexer, SEMI, 1, (struct pair){';', DSEMI});
         } else {
-            setToken(lexer, PLUS, 0);
+            setToken(lexer, SEMI, 0);
         }
         break;
-    case '-':
+    case '<':
+        lexer->current.tokenId = LESS;
+        memcpy(lexer->current.lexeme, "<\0", 2);
+        length = 1;
+        nextChar(lexer);
+        if (lexer->currentChar == '<') {
+            lexer->current.tokenId = DLESS;
+            memcpy(lexer->current.lexeme + length, "<\0", 2);
+            length++;
+            nextChar(lexer);
+            if (lexer->currentChar == '<') {
+                lexer->current.tokenId = TLESS;
+                memcpy(lexer->current.lexeme + length, "<\0", 2);
+                length++;
+            } else if (lexer->currentChar == '-') {
+                lexer->current.tokenId = DLESSDASH;
+                memcpy(lexer->current.lexeme + length, "-\0", 2);
+                length++;
+            }
+        } else if (lexer->currentChar == '>') {
+            lexer->current.tokenId = LESSGREAT;
+            memcpy(lexer->current.lexeme + length, ">\0", 2);
+            length++;
+        } else if (lexer->currentChar == '&') {
+            lexer->current.tokenId = LESSAND;
+            memcpy(lexer->current.lexeme + length, "&\0", 2);
+            length++;
+        }
+        nextChar(lexer);
+        break;
+    case '>':
+        if (peekCharIs(lexer, '>')) {
+            setToken(lexer, GREAT, 1, (struct pair){})
+        }
+        break;
     }
 }
 

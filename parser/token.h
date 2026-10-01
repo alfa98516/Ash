@@ -48,16 +48,18 @@ typedef enum _TOKEN_ID {
     OR,                 // '|',
     SEMI,               // ';'
     DSEMI,              // ';;'
+    LESS,               // '<'
     DLESS,              // '<<'
     TLESS,              // '<<<' NOT THIS BULLSHIT AGAIN
+    GREAT,              // '>'
     DGREAT,             // '>>'
-    LESSAND,             // '<&'
+    LESSAND,            // '<&'
     GREATAND,           // '>&'
     LESSGREAT,          // '<>'
     DLESSDASH,          // '<<-' This ones gonna be a bitch
     CLOBBER,            // '>|'  Yes that is actually what the token is called
     DASH,               // '-'
-    DECR,               // 'DECR'
+    DECR,               // '--'
     PLUS,               // '+'
     INCR,               // '++'
     MUL,                // '*'
@@ -88,6 +90,10 @@ typedef enum _TOKEN_ID {
      * "These are reserved words, not operator tokens, and are
      *  recognized when reserved words are recognized." 
      */
+    LPAREN,             // '('
+    LDPAREN,            // '(('
+    RPAREN,             // ')'
+    RDPAREN,            // '))'
     LBRACKET,           // '['
     RBRACKET,           // ']'
     LDBRACKET,          // '[['
