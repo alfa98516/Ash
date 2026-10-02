@@ -123,9 +123,6 @@ void nextToken(struct Lexer* lexer) {
     case '|':
         setToken(lexer, OR, 1, (struct pair){'|', OR_IF});
         break;
-    case '+':
-        setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
-        break;
     case ';':
         if (peekCharIs(lexer, ';')) {
             setToken(lexer, SEMI, 1, (struct pair){';', DSEMI});
@@ -165,9 +162,23 @@ void nextToken(struct Lexer* lexer) {
         break;
     case '>':
         if (peekCharIs(lexer, '>')) {
-            setToken(lexer, GREAT, 1, (struct pair){})
+            setToken(lexer, GREAT, 1, (struct pair){'>', DGREAT});
+        } else if (peekCharIs(lexer, '&')) {
+            setToken(lexer, GREAT, 1, (struct pair){'&', GREATAND});
+        } else {
+            setToken(lexer, GREAT, 1, (struct pair){'|', CLOBBER});
         }
         break;
+    case '-':
+        setToken(lexer, DASH, 1, (struct pair){'-', DECR});
+    case '+':
+        setToken(lexer, PLUS, 1, (struct pair){'+', INCR});
+        break;
+    case '*':
+        setToken(lexer, MUL, 0);
+        break;
+    case '/':
+        setToken(lexer, DIV, 0);
     }
 }
 
