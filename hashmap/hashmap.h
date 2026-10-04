@@ -4,12 +4,13 @@
 #include "../linkedlist/linkedlist.h"
 #include <stdlib.h>
 struct HashMap {
-    struct LinkedList* hm[INITIAL_HASH_SIZE];
+    struct LinkedList** HashArray;
     size_t capacity;
 };
 struct HashMap* initHashMap();
 Token find(char* l);
 int hash(char* l);
 void update(char* l, Token t);
-Node* remove(char* l);
+struct Node* remove(char* l);
+void rebuild(struct HashMap h);
 #endif
