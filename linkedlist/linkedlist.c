@@ -58,6 +58,8 @@ Token dequeue(struct LinkedList* LL) {
 }
 
 void delList(struct LinkedList* LL) {
+    if (!LL)
+        return;
     struct Node* curr = LL->Head->next;
     struct Node* prev;
     while (curr != NULL) {

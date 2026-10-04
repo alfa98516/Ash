@@ -1,19 +1,28 @@
 #include "dynamicArray.h"
 #include <stddef.h>
+#include <stdio.h>
 
 struct DynamicArray* initArray() {
-    struct DynamicArray* da =
-        malloc(sizeof(struct DynamicArray) +
-               sizeof(struct LinkedList) * INITIAL_CAPACITY);
+    struct DynamicArray* da = malloc(sizeof(struct DynamicArray));
+    if (!da)
+        return NULL;
+    da->array = malloc(sizeof(struct LinkedList*) * INITIAL_CAPACITY);
+    if (!da->array) {
+        free(da);
+        return NULL;
+    }
     da->capacity = INITIAL_CAPACITY;
     da->size = 0;
+    for (size_t i = 0; i < da->capacity; i++) {
+        da->array[i] = initList();
+    }
     return da;
 }
 
 void grow(struct DynamicArray* da) {
     da->capacity *= 2;
     struct LinkedList** _array =
-        malloc(sizeof(struct LinkedList) * da->capacity);
+        malloc(sizeof(struct LinkedList*) * da->capacity);
     for (size_t i = 0; i < da->size; i++) {
         _array[i] = da->array[i];
         free(da->array[i]);
@@ -28,7 +37,7 @@ void shrink(struct DynamicArray* da) {
         return;
     da->capacity /= 2;
     struct LinkedList** _array =
-        malloc(sizeof(struct LinkedList) * da->capacity);
+        malloc(sizeof(struct LinkedList*) * da->capacity);
     for (size_t i = 0; i < da->size; i++) {
         _array[i] = da->array[i];
         delList(da->array[i]);
@@ -68,8 +77,11 @@ void erase(struct DynamicArray* da, size_t i) {
 }
 
 void append(struct DynamicArray* da, struct LinkedList* LL) {
-    if (da->size >= da->capacity)
+    if (da->size >= da->capacity) {
+        printf("resizing....\n");
         grow(da);
+    }
+    delList(da->array[da->size]);
     da->array[da->size] = LL;
     da->size++;
 }
@@ -92,5 +104,6 @@ void delArray(struct DynamicArray* da) {
     for (size_t i = 0; i < da->capacity; i++) {
         delList(da->array[i]);
     }
+    free(da->array);
     free(da);
 }
