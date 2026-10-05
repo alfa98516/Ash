@@ -1,6 +1,7 @@
 #include "linkedlist.h"
 #include "../parser/parser.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,6 +42,22 @@ void prepend(struct LinkedList* LL, Token data) {
     LL->Head->next = newNode;
 }
 
+size_t length(struct LinkedList* LL) {
+    struct Node* curr = LL->Head->next;
+    size_t len = 0;
+    while (curr != NULL) {
+        if (curr == LL->Tail)
+            return len;
+
+        len++;
+        curr = curr->next;
+    }
+
+    // the user could destroy the tail in some circumstances,
+    // i don't know why they would do that but they could
+    return len;
+}
+
 Token dequeue(struct LinkedList* LL) {
     Token t;
 
@@ -72,7 +89,7 @@ void delList(struct LinkedList* LL) {
     free(LL);
 }
 
-Token find(struct LinkedList* LL, char* t) {
+Token find(struct LinkedList* LL, const uint8_t* t) {
     struct Node* curr = LL->Head;
     while (curr != NULL) {
         if (strcmp(curr->t.lexeme, t)) {

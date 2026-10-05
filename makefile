@@ -1,6 +1,6 @@
 # sources 
 SRC     = main.c linkedlist/linkedlist.c parser/parser.c parser/lexer.c dynamicArray/dynamicArray.c
-TESTSRC = testing/test_array.c dynamicArray/dynamicArray.c linkedlist/linkedlist.c 
+TESTSRC = testing/test_hashmap.c dynamicArray/dynamicArray.c linkedlist/linkedlist.c hashmap/hashmap.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 

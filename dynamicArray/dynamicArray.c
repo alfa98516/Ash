@@ -19,6 +19,22 @@ struct DynamicArray* initArray() {
     return da;
 }
 
+struct DynamicArray* initArrayCapacity(size_t capacity) {
+    struct DynamicArray* da = malloc(sizeof(struct DynamicArray));
+    if (!da)
+        return NULL;
+    da->array = malloc(sizeof(struct LinkedList*) * capacity);
+    if (!da->array) {
+        free(da);
+        return NULL;
+    }
+    da->capacity = capacity;
+    for (size_t i = 0; i < da->capacity; i++) {
+        da->array[i] = initList();
+    }
+    return da;
+}
+
 void grow(struct DynamicArray* da) {
     da->capacity *= 2;
     struct LinkedList** _array =

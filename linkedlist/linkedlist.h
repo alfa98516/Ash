@@ -1,6 +1,8 @@
 #ifndef LINKED_LIST
 #define LINKED_LIST
 #include "../parser/token.h"
+#include <stddef.h>
+#include <stdint.h>
 struct Node {
     struct Node* next;
     Token t;
@@ -15,7 +17,8 @@ struct LinkedList* initList();
 int isEmpty(struct LinkedList* LL);
 void prepend(struct LinkedList* LL, Token data);
 Token dequeue(struct LinkedList* LL);
-
+Token find(struct LinkedList* LL, const uint8_t* t);
+size_t length(struct LinkedList* LL);
 // Making the user clean up the data structure would be unsafe,
 // I provide a  deleate function for this.
 void delList(struct LinkedList* LL);

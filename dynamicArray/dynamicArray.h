@@ -9,6 +9,7 @@ struct DynamicArray {
     size_t capacity;
 };
 struct DynamicArray* initArray();
+struct DynamicArray* initArrayCapacity(size_t capacity);
 void grow(struct DynamicArray* da);
 void shrink(struct DynamicArray* da);
 void fix(struct DynamicArray* da, size_t i, int mode);
