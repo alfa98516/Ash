@@ -30,9 +30,8 @@ const size_t size(struct HashMap* hm) {
 }
 
 void insertHm(struct HashMap* hm, char* l, Token t) {
-    if (size(hm) > hm->capacity * 0.75) {
+    if (size(hm) > hm->capacity * 0.75)
         rebuild(hm);
-    }
     size_t i = hash(l) % hm->capacity;
     printf("capacity at insert: %ld\n", hm->capacity);
     printf("Hash of lexeme %s is: %ld\n", l, i);
@@ -62,9 +61,7 @@ void rebuild(struct HashMap* hm) {
         struct Node* node = hm->HashArray->array[i]->Head->next;
         while (node != hm->HashArray->array[i]->Tail) {
             size_t hashed = hash(node->t.lexeme) % capacity;
-            Token newT;
-            memcpy(&newT, &node->t, sizeof(struct _TOKEN));
-            prepend(HashArray->array[i], newT);
+            prepend(HashArray->array[i], node->t);
             node = node->next;
         }
     }

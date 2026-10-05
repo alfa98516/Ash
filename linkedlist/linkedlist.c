@@ -2,6 +2,7 @@
 #include "../parser/parser.h"
 
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -90,11 +91,13 @@ void delList(struct LinkedList* LL) {
 }
 
 Token find(struct LinkedList* LL, const uint8_t* t) {
-    struct Node* curr = LL->Head;
+    struct Node* curr = LL->Head->next;
     while (curr != NULL) {
-        if (strcmp(curr->t.lexeme, t)) {
+        if (strcmp(curr->t.lexeme, t) == 0) {
+            printf("lexeme of token were trying to find: %s\n", curr->t.lexeme);
             return curr->t;
         }
+        curr = curr->next;
     }
     return (struct _TOKEN){ERROR, "ERROR\0"};
 }
