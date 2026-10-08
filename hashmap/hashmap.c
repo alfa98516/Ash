@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/types.h>
 struct HashMap* initHashMap() {
     struct HashMap* hm = malloc(sizeof(struct HashMap));
     hm->HashArray = initArray();
@@ -13,7 +14,7 @@ struct HashMap* initHashMap() {
 
 int hash(const uint8_t* l) {
     size_t hash = 0;
-    size_t len = strlen(l);
+    size_t len = strlen((const char*)l);
     for (size_t i = 0; i < len; i++) {
         hash = hash * 31 + l[i];
     }
@@ -27,15 +28,14 @@ const size_t size(struct HashMap* hm) {
             len += length(hm->HashArray->array[i]);
         }
     }
+    return len;
 }
 
 void insertHm(struct HashMap* hm, char* l, Token t) {
     if (size(hm) > hm->capacity * 0.75) {
         rebuild(hm);
     }
-    size_t i = hash(l) % hm->capacity;
-    printf("capacity at insert: %ld\n", hm->capacity);
-    printf("Hash of lexeme %s is: %ld\n", l, i);
+    size_t i = hash((const uint8_t*)l) % hm->capacity;
     prepend(hm->HashArray->array[i], t);
 }
 
@@ -50,8 +50,7 @@ void __update(struct HashMap* hm, char* l, Token t) {
 }
 
 struct Node* __remove(struct HashMap* hm, char* l) {
-    return hm->HashArray->array[0]
-        ->Head; // once again, im kind of not using this
+    return hm->HashArray->array[0]->Head; // once again, im kind of not using this
 }
 
 void rebuild(struct HashMap* hm) {
@@ -61,10 +60,11 @@ void rebuild(struct HashMap* hm) {
     for (size_t i = 0; i < hm->capacity; i++) {
         struct Node* node = hm->HashArray->array[i]->Head->next;
         while (node != hm->HashArray->array[i]->Tail) {
-            size_t hashed = hash(node->t.lexeme) % capacity;
-            Token newT;
-            memcpy(&newT, &node->t, sizeof(struct _TOKEN));
-            prepend(HashArray->array[i], newT);
+            size_t hashed = hash((const uint8_t*)node->t.lexeme) % capacity;
+            struct _TOKEN newT;
+            memcpy(newT.lexeme, node->t.lexeme, strlen(node->t.lexeme) + 1);
+            newT.tokenId = node->t.tokenId;
+            prepend(HashArray->array[hashed], newT);
             node = node->next;
         }
     }

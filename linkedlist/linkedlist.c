@@ -6,15 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-int isEmpty(struct LinkedList* LL) {
-    return (LL->Head->next == LL->Tail);
-}
+int isEmpty(struct LinkedList* LL) { return (LL->Head->next == LL->Tail); }
 
 struct LinkedList* initList(void) {
-    struct LinkedList* LL =
-        (struct LinkedList*)malloc(sizeof(struct LinkedList));
-    if (!LL)
-        return NULL;
+    struct LinkedList* LL = (struct LinkedList*)malloc(sizeof(struct LinkedList));
+    if (!LL) return NULL;
     // initialize head and tail
 
     LL->Head = (struct Node*)malloc(sizeof(struct Node));
@@ -47,8 +43,7 @@ size_t length(struct LinkedList* LL) {
     struct Node* curr = LL->Head->next;
     size_t len = 0;
     while (curr != NULL) {
-        if (curr == LL->Tail)
-            return len;
+        if (curr == LL->Tail) return len;
 
         len++;
         curr = curr->next;
@@ -62,8 +57,7 @@ size_t length(struct LinkedList* LL) {
 Token dequeue(struct LinkedList* LL) {
     Token t;
 
-    if (isEmpty(LL))
-        return (Token){ERROR, "EMPTY\0"};
+    if (isEmpty(LL)) return (Token){ERROR, "EMPTY\0"};
 
     struct Node* oldNode = LL->Head->next;
 
@@ -76,8 +70,7 @@ Token dequeue(struct LinkedList* LL) {
 }
 
 void delList(struct LinkedList* LL) {
-    if (!LL)
-        return;
+    if (!LL) return;
     struct Node* curr = LL->Head->next;
     struct Node* prev;
     while (curr != NULL) {
@@ -94,7 +87,6 @@ Token find(struct LinkedList* LL, const uint8_t* t) {
     struct Node* curr = LL->Head->next;
     while (curr != NULL) {
         if (strcmp(curr->t.lexeme, t) == 0) {
-            printf("lexeme of token were trying to find: %s\n", curr->t.lexeme);
             return curr->t;
         }
         curr = curr->next;
