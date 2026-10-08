@@ -38,6 +38,7 @@ struct Lexer* initLexer(const int fd) {
     insertHm(lexer->kw_hm, "in\0", (struct _TOKEN){IN, "in\0"});
     insertHm(lexer->kw_hm, "coproc\0", (struct _TOKEN){COPROC, "coproc\0"});
     insertHm(lexer->kw_hm, "time\0", (struct _TOKEN){TIME, "time\0"});
+    insertHm(lexer->kw_hm, "select\0", (struct _TOKEN){SELECT, "select\0"});
 
     lexer->currentChar = getc(lexer->f);
     return lexer;
@@ -145,7 +146,11 @@ void nextToken(struct Lexer* lexer) {
         setToken(lexer, AND, 1, (struct pair){'&', AND_IF});
         break;
     case '|':
-        setToken(lexer, OR, 1, (struct pair){'|', OR_IF});
+        if (peekCharIs(lexer, '|')) {
+            setToken(lexer, OR, 1, (struct pair){'|', OR_IF});
+        } else {
+            setToken(lexer, OR, 1, (struct pair){'&', OR_AND});
+        }
         break;
     case ';':
         if (peekCharIs(lexer, ';')) {

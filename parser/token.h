@@ -46,6 +46,7 @@ typedef enum _TOKEN_ID {
     AND_IF,             // '&&'
     OR_IF,              // '||'
     OR,                 // '|',
+    OR_AND,             // '|&'
     SEMI,               // ';'
     DSEMI,              // ';;'
     LESS,               // '<'
@@ -89,6 +90,7 @@ typedef enum _TOKEN_ID {
     IN,                 // 'in'
     TIME,               // 'time'
     COPROC,             // 'coproc'
+    SELECT,             // 'select'
 
     /* From the POSIX Shell Standard: 
      * "These are reserved words, not operator tokens, and are
