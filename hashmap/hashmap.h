@@ -2,7 +2,6 @@
 #define HASH_MAP
 #define INITIAL_HASH_SIZE 16
 #include "../dynamicArray/dynamicArray.h"
-#include "../linkedlist/linkedlist.h"
 #include <stdint.h>
 #include <stdlib.h>
 struct HashMap {

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+
 struct HashMap* initHashMap() {
     struct HashMap* hm = malloc(sizeof(struct HashMap));
     hm->HashArray = initArray();
@@ -50,7 +51,8 @@ void __update(struct HashMap* hm, char* l, Token t) {
 }
 
 struct Node* __remove(struct HashMap* hm, char* l) {
-    return hm->HashArray->array[0]->Head; // once again, im kind of not using this
+    return hm->HashArray->array[0]
+        ->Head; // once again, im kind of not using this
 }
 
 void rebuild(struct HashMap* hm) {

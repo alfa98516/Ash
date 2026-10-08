@@ -5,7 +5,7 @@
 #include <string.h>
 
 int main() {
-    int fd = open("/home/alfa/code/git/Ash/scripts/test", O_RDONLY);
+    int fd = open("/home/alfa/code/git/Ash/scripts/testing.sh", O_RDONLY);
     struct Lexer* lexer = initLexer(fd);
 
     while (lexer->current.tokenId != EOI) {
@@ -166,9 +166,18 @@ int main() {
         case IN:
             printf("IN");
             break;
+        case WHILE:
+            printf("WHILE");
+            break;
+        case TIME:
+            printf("TIME");
+            break;
+        case COPROC:
+            printf("COPROC");
+            break;
         }
         printf("}\n");
     }
 
-    free(lexer);
+    delLexer(lexer);
 }

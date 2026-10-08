@@ -2,12 +2,16 @@
 #include "token.h"
 #include <ctype.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+int ident_called = 0;
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
-    if (!lexer) return NULL;
+    if (!lexer)
+        return NULL;
     if (fd == -1) {
         lexer->f = stdin;
     } else {
@@ -17,12 +21,31 @@ struct Lexer* initLexer(const int fd) {
         }
         lexer->f = f;
     }
+
+    lexer->kw_hm = initHashMap();
+    insertHm(lexer->kw_hm, "if\0", (struct _TOKEN){IF, "if\0"});
+    insertHm(lexer->kw_hm, "then\0", (struct _TOKEN){THEN, "then\0"});
+    insertHm(lexer->kw_hm, "else\0", (struct _TOKEN){ELSE, "else\0"});
+    insertHm(lexer->kw_hm, "elif\0", (struct _TOKEN){ELIF, "elif\0"});
+    insertHm(lexer->kw_hm, "fi\0", (struct _TOKEN){FI, "fi\0"});
+    insertHm(lexer->kw_hm, "do\0", (struct _TOKEN){DO, "do\0"});
+    insertHm(lexer->kw_hm, "done\0", (struct _TOKEN){DONE, "done\0"});
+    insertHm(lexer->kw_hm, "case\0", (struct _TOKEN){CASE, "case\0"});
+    insertHm(lexer->kw_hm, "esac\0", (struct _TOKEN){ESAC, "esac\0"});
+    insertHm(lexer->kw_hm, "while\0", (struct _TOKEN){WHILE, "while\0"});
+    insertHm(lexer->kw_hm, "until\0", (struct _TOKEN){UNTIL, "until\0"});
+    insertHm(lexer->kw_hm, "for\0", (struct _TOKEN){FOR, "for\0"});
+    insertHm(lexer->kw_hm, "in\0", (struct _TOKEN){IN, "in\0"});
+    insertHm(lexer->kw_hm, "coproc\0", (struct _TOKEN){COPROC, "coproc\0"});
+    insertHm(lexer->kw_hm, "time\0", (struct _TOKEN){TIME, "time\0"});
+
     lexer->currentChar = getc(lexer->f);
     return lexer;
 }
 
 void nextChar(struct Lexer* lexer) {
-    if (lexer->currentChar == EOF) return;
+    if (lexer->currentChar == EOF)
+        return;
     lexer->currentChar = getc(lexer->f);
 }
 
@@ -43,11 +66,12 @@ int peekCharIs(struct Lexer* lexer, char c) {
  * @brief: All of the form [a-zA-Z][a-zA-Z0-9]*
  */
 char* identifier(struct Lexer* lexer) {
-    if (!isalpha(lexer->currentChar)) exit(3); // HACK: make an actual error handler.
+    if (!isalpha(lexer->currentChar))
+        exit(3); // HACK: make an actual error handler.
 
     char* lexeme = malloc(MAX_ARG_NAME);
 
-    int i = 0; // cry about it
+    int i = 0;                   // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
            (i < MAX_ARG_NAME)) { // need space for null terminator
 
@@ -179,7 +203,35 @@ void nextToken(struct Lexer* lexer) {
         break;
     case '/':
         setToken(lexer, DIV, 0);
+        break;
+    case '(':
+        setToken(lexer, LPAREN, 1, (struct pair){'(', LDPAREN});
+    case ')':
+        setToken(lexer, RPAREN, 1, (struct pair){')', RDPAREN});
+    case '[':
+        setToken(lexer, LBRACKET, 1, (struct pair){'[', LDBRACKET});
+    case '{':
+        setToken(lexer, LBRACE, 0);
+    case '}':
+        setToken(lexer, RBRACE, 0);
+    case '!':
+        setToken(lexer, BANG, 0);
+    default:
+        uint8_t* ident = identifier(lexer);
+        Token t = findHm(lexer->kw_hm, ident);
+        if (t.tokenId != ERROR) {
+            lexer->current = t;
+
+        } else {
+            memset(lexer->current.lexeme, 0, 255);
+            memcpy(lexer->current.lexeme, ident, strlen((char*)ident));
+            lexer->current.tokenId = WORD;
+        }
+        free(ident);
     }
 }
 
-void delLexer(struct Lexer* lexer) { free(lexer); }
+void delLexer(struct Lexer* lexer) {
+    delMap(lexer->kw_hm);
+    free(lexer);
+}

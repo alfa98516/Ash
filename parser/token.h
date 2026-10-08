@@ -27,7 +27,7 @@ typedef enum _TOKEN_ID {
     WORD,               /* This will encompess variable declerations and variable expansions, 
                          * in this case, functions are variables.
                          */
-    ASSIGNMENT_WORD,    /* ASSIGNMENT_WORD is difined as anything of the form WORD=[VALUE] 
+    ASSIGNMENT_WORD,    /* ASSIGNMENT_WORD is defined as anything of the form WORD=[VALUE] 
                          * If it is of the form WORD, it is just a word.
                          */
  
@@ -82,9 +82,13 @@ typedef enum _TOKEN_ID {
     DO,                 // 'do'
     DONE,               // 'done'
     CASE,               // 'case'
-    ESAC,               // 'while'
+    ESAC,               // 'esac'
+    WHILE,              // 'while'
     UNTIL,              // 'until'
     FOR,                // 'for'
+    IN,                 // 'in'
+    TIME,               // 'time'
+    COPROC,             // 'coproc'
 
     /* From the POSIX Shell Standard: 
      * "These are reserved words, not operator tokens, and are
@@ -95,13 +99,12 @@ typedef enum _TOKEN_ID {
     RPAREN,             // ')'
     RDPAREN,            // '))'
     LBRACKET,           // '['
-    RBRACKET,           // ']'
     LDBRACKET,          // '[['
+    RBRACKET,           // ']'
     RDBRACKET,          // ']]'
     LBRACE,             // '{'
     RBRACE,             // '}'
     BANG,               // '!' Only grammer I've seen that calls it bang
-    IN,                 // 'in'
     
 
 } TokenId;
@@ -111,4 +114,5 @@ typedef struct _TOKEN {
     TokenId tokenId;
     char lexeme[MAX_ARG_NAME];
 } Token;
+
 #endif

@@ -1,5 +1,6 @@
 #ifndef LEXICAL_ANALYZER
 #define LEXICAL_ANALYZER
+#include "../hashmap/hashmap.h"
 #include "token.h"
 #include <stdarg.h>
 #include <stdio.h>
@@ -11,6 +12,7 @@ struct Lexer {
     char currentChar;
     Token current; // will be used in the parser
     FILE* f;
+    struct HashMap* kw_hm;
 };
 
 struct pair {

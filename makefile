@@ -1,6 +1,6 @@
 # sources 
 SRC     = main.c linkedlist/linkedlist.c parser/parser.c parser/lexer.c dynamicArray/dynamicArray.c
-TESTSRC = testing/test_hashmap.c dynamicArray/dynamicArray.c linkedlist/linkedlist.c hashmap/hashmap.c
+TESTSRC = testing/test_lexer.c parser/lexer.c dynamicArray/dynamicArray.c linkedlist/linkedlist.c hashmap/hashmap.c
 OBJ     = $(SRC:.c=.o)
 TESTOBJ = $(TESTSRC:.c=.o)
 
@@ -11,10 +11,10 @@ TARGETTEST = test
 
 # cflags
 CC       = gcc
-STD      = -std=gnu2x
+STD      = -std=gnu23
 WARN     = -Wpedantic
 DEBUG    = -g -DDEBUG
-LIBS     = -lutil
+LIBS     = -lutil -static-libasan
 SANITIZE = -fsanitize=undefined,address
 CFLAGS   = $(STD) $(WARN) $(DEBUG) $(SANITIZE)
 
