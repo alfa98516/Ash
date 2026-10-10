@@ -1,10 +1,12 @@
-#ifndef TOKEN
-#define TOKEN
+
 /* Copyright (c) 2026 Alfa Reynisdóttir. All Rights Reserved.
  *
  *
- *
  */
+#ifndef TOKEN
+#define TOKEN
+#define MAX_DIGITS 20 // Largest integer in bash is a sint64 (2^63 - 1), which is 19 digits,
+// we need one extra for the signage (i.e -2^63).
 
 // I want my comments looking nice sorry clangd.
 // clang-format off
@@ -31,7 +33,7 @@ typedef enum _TOKEN_ID {
                          * If it is of the form WORD, it is just a word.
                          */
  
-    NUMBER,             // [1-9] [0-9]*
+    NUMBER,             // [1-9][0-9]*
     
     IO_NUMBER,          /* The POSIX Shell Standard defines a meaningful difference between normal
                          * integers and io numbers (file descriptors), from the POSIX Shell standard:
@@ -39,7 +41,8 @@ typedef enum _TOKEN_ID {
                          * '>', the token identifier IO_NUMBER shall be returned." 
                          * If we get regex of the form: "[0-9]?(?:>>|<<|>|<)&?[0-9]?" the numbers in it are io_numbers (file descriptors)
                          *
-                         */
+                         */ 
+    STRING_LITERAL,      // "()&|-|+|[0-9]|[a-zA-Z])*"
    
     // Operators.
     AND,                // '&'
@@ -51,13 +54,13 @@ typedef enum _TOKEN_ID {
     DSEMI,              // ';;'
     LESS,               // '<'
     DLESS,              // '<<'
-    TLESS,              // '<<<' NOT THIS BULLSHIT AGAIN
+    TLESS,              // '<<<' 
     GREAT,              // '>'
     DGREAT,             // '>>'
     LESSAND,            // '<&'
     GREATAND,           // '>&'
     LESSGREAT,          // '<>'
-    DLESSDASH,          // '<<-' This ones gonna be a bitch
+    DLESSDASH,          // '<<-' 
     CLOBBER,            // '>|'  Yes that is actually what the token is called
     DASH,               // '-'
     DECR,               // '--'
@@ -66,6 +69,7 @@ typedef enum _TOKEN_ID {
     MUL,                // '*'
     DIV,                // '/' Bash does not have floating point but it does have division, 
                         //     it works like '//' in python
+    ASSIGN,             // '='
     
     
 

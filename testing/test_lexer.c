@@ -12,7 +12,6 @@ int main() {
         nextToken(lexer);
         printf("{lexeme: '%s', TokenID: ", lexer->current.lexeme);
         switch (lexer->current.tokenId) {
-
         case ERROR:
             printf("ERROR");
             break;
@@ -174,6 +173,15 @@ int main() {
             break;
         case COPROC:
             printf("COPROC");
+            break;
+        case STRING_LITERAL:
+            printf("STRING_LITERAL");
+            break;
+        case OR_AND:
+            printf("OR_AND");
+            break;
+        case SELECT:
+            printf("SELECT");
             break;
         }
         printf("}\n");

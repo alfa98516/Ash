@@ -122,8 +122,7 @@ void setToken(struct Lexer* lexer, TokenId Ti, int nPairs, ...) {
 uint8_t* string_builder(struct Lexer* lexer) {
     uint8_t* strng = malloc(MAX_ARG_NAME);
     size_t i = 0;
-    if (lexer->currentChar == '"') {
-    }
+
     while (lexer->currentChar != '"' && lexer->currentChar != '\'') {
         if (lexer->currentChar == '\n') {
             delLexer(lexer);
@@ -137,7 +136,6 @@ uint8_t* string_builder(struct Lexer* lexer) {
         }
     }
     strng[i] = '\0';
-    return strng;
 }
 
 uint8_t* integer_builder(struct Lexer* lexer) {
