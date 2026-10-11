@@ -1,13 +1,12 @@
+#include "../macros.h"
 #include "../parser/lexer.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 int main() {
     int fd = open("/home/alfa/code/git/Ash/scripts/testing.sh", O_RDONLY);
     struct Lexer* lexer = initLexer(fd);
-
     while (lexer->current.tokenId != EOI) {
         nextToken(lexer);
         printf("{lexeme: '%s', TokenID: ", lexer->current.lexeme);
