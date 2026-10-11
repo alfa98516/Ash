@@ -15,7 +15,7 @@ STD      = -std=gnu23
 WARN     = -Wpedantic
 DEBUG    = -g -DDEBUG
 LIBS     = -lutil -static-libasan
-SANITIZE = -fsanitize=undefined
+SANITIZE = -fsanitize=undefined,address
 CFLAGS   = $(STD) $(WARN) $(DEBUG) $(SANITIZE)
 
 # default build

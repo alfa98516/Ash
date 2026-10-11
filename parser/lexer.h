@@ -4,15 +4,17 @@
 #include "token.h"
 #include <stdarg.h>
 #include <stdio.h>
-#define MAX_TOK                                                                                    \
-    2048 // gargantuan amount of tokens probably.
-         // Worst case MAX_ARG_NAME * MAX_TOK = 522,240 bytes = 5 Mb
-         // of memory for the tokens.
+#define MAX_TOK                                                                \
+    2048           // gargantuan amount of tokens probably.
+                   // Worst case MAX_ARG_NAME * MAX_TOK = 522,240 bytes = 5 Mb
+                   // of memory for the tokens.
 struct Lexer {
     char currentChar;
     Token current; // will be used in the parser
     FILE* f;
     struct HashMap* kw_hm;
+    uint32_t line;
+    uint32_t col;
 };
 
 struct pair {

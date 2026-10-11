@@ -5,7 +5,9 @@
  */
 #ifndef TOKEN
 #define TOKEN
-#define MAX_DIGITS 20 // Largest integer in bash is a sint64 (2^63 - 1), which is 19 digits,
+#include <stdint.h>
+#define MAX_DIGITS                                                             \
+    20 // Largest integer in bash is a sint64 (2^63 - 1), which is 19 digits,
 // we need one extra for the signage (i.e -2^63).
 
 // I want my comments looking nice sorry clangd.
@@ -119,6 +121,8 @@ typedef enum _TOKEN_ID {
 typedef struct _TOKEN {
     TokenId tokenId;
     char lexeme[MAX_ARG_NAME];
+    uint32_t col;
+    uint32_t line;
 } Token;
 
 #endif

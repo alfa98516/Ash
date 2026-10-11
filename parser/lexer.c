@@ -9,10 +9,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+void lexer_error_handler(char* msg, struct Lexer* l) {
+    fprintf(stderr, "%s: %d:%d\n", msg, l->line, l->col);
+    delLexer(l);
+    ASSERT(0);
+}
 int ident_called = 0;
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
-    if (!lexer) ERROR("Heap allocation for Lexer failed.");
+    if (!lexer) {
+        fprintf(stderr, "Lexer heap allocation did not work.\n");
+        ASSERT(0);
+    }
     if (fd == -1) {
         lexer->f = stdin;
     } else {
@@ -22,6 +30,8 @@ struct Lexer* initLexer(const int fd) {
         }
         lexer->f = f;
     }
+    lexer->col = 0;
+    lexer->line = 0;
 
     lexer->kw_hm = initHashMap();
     insertHm(lexer->kw_hm, "if\0", (struct _TOKEN){IF, "if\0"});
@@ -46,8 +56,14 @@ struct Lexer* initLexer(const int fd) {
 }
 
 void nextChar(struct Lexer* lexer) {
-    if (lexer->currentChar == EOF) return;
+    if (lexer->currentChar == EOF)
+        return;
     lexer->currentChar = getc(lexer->f);
+    if (lexer->currentChar == '\n') {
+        lexer->col = -1;
+        lexer->line++;
+    }
+    lexer->col++;
 }
 
 char peekChar(struct Lexer* lexer) {
@@ -67,15 +83,16 @@ int peekCharIs(struct Lexer* lexer, char c) {
  * @brief: All of the form [a-zA-Z][a-zA-Z0-9]*
  */
 uint8_t* identifier(struct Lexer* lexer) {
-    if (!isalpha(lexer->currentChar)) exit(3); // HACK: make an actual error handler.
-
+    if (!isalpha(lexer->currentChar))
+        lexer_error_handler(
+            "Congrats, I have no idea how you managed to get this error.",
+            lexer);
     uint8_t* lexeme = malloc(MAX_ARG_NAME);
     if (!lexeme) {
-        delLexer(lexer);
-        ERROR("Identifier heap allocation did not work");
+        lexer_error_handler("Identifier heap allocation did not work", lexer);
     }
 
-    size_t i = 0; // cry about it
+    size_t i = 0;                // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
            (i < MAX_ARG_NAME)) { // need space for null terminator
 
@@ -133,15 +150,14 @@ uint8_t* string_builder(struct Lexer* lexer) {
     }
     while (lexer->currentChar != '"' && lexer->currentChar != '\'') {
         if (lexer->currentChar == '\n') {
-            delLexer(lexer);
-            exit(1);
+            lexer_error_handler("Strings cannot contain newline", lexer);
         }
         strng[i] = lexer->currentChar;
         i++;
         nextChar(lexer);
         if (i < MAX_ARG_NAME) {
             delLexer(lexer);
-            ERROR("String was too big.");
+            lexer_error_handler("String was too big", lexer);
         }
     }
     strng[i] = '\0';
@@ -158,8 +174,7 @@ uint8_t* integer_builder(struct Lexer* lexer) {
     }
     while (isdigit(lexer->currentChar)) {
         if (MAX_DIGITS < i) {
-            delLexer(lexer);
-            ERROR("Integer Overlfow.");
+            lexer_error_handler("Integer Overlfow.", lexer);
         }
         integer[i] = lexer->currentChar;
         nextChar(lexer);
