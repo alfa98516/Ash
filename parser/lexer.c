@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "../macros.h"
 #include "token.h"
 #include <ctype.h>
 #include <math.h>
@@ -11,7 +12,7 @@
 int ident_called = 0;
 struct Lexer* initLexer(const int fd) {
     struct Lexer* lexer = (struct Lexer*)malloc(sizeof(struct Lexer));
-    if (!lexer) return NULL;
+    if (!lexer) ERROR("Heap allocation for Lexer failed.");
     if (fd == -1) {
         lexer->f = stdin;
     } else {
@@ -69,6 +70,10 @@ uint8_t* identifier(struct Lexer* lexer) {
     if (!isalpha(lexer->currentChar)) exit(3); // HACK: make an actual error handler.
 
     uint8_t* lexeme = malloc(MAX_ARG_NAME);
+    if (!lexeme) {
+        delLexer(lexer);
+        ERROR("Identifier heap allocation did not work");
+    }
 
     size_t i = 0; // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
@@ -122,7 +127,9 @@ void setToken(struct Lexer* lexer, TokenId Ti, int nPairs, ...) {
 uint8_t* string_builder(struct Lexer* lexer) {
     uint8_t* strng = malloc(MAX_ARG_NAME);
     size_t i = 0;
-    if (lexer->currentChar == '"') {
+    int mode = 0; // 0 == "", 1 == ''
+    if (lexer->currentChar == '\'') {
+        mode = 1;
     }
     while (lexer->currentChar != '"' && lexer->currentChar != '\'') {
         if (lexer->currentChar == '\n') {
@@ -133,7 +140,8 @@ uint8_t* string_builder(struct Lexer* lexer) {
         i++;
         nextChar(lexer);
         if (i < MAX_ARG_NAME) {
-            exit(1);
+            delLexer(lexer);
+            ERROR("String was too big.");
         }
     }
     strng[i] = '\0';
@@ -151,8 +159,7 @@ uint8_t* integer_builder(struct Lexer* lexer) {
     while (isdigit(lexer->currentChar)) {
         if (MAX_DIGITS < i) {
             delLexer(lexer);
-            fprintf(stderr, "Integer overflow\n");
-            exit(1);
+            ERROR("Integer Overlfow.");
         }
         integer[i] = lexer->currentChar;
         nextChar(lexer);
@@ -304,7 +311,7 @@ void nextToken(struct Lexer* lexer) {
                         free(ident);
                         break;
                     }
-                } else if (peekCharIs(lexer, '"')) {
+                } else if (peekCharIs(lexer, '"') || peekCharIs(lexer, '\'')) {
                     nextChar(lexer);
                 }
                 lexer->current.tokenId = WORD;
