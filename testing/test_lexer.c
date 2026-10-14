@@ -183,7 +183,7 @@ int main() {
             printf("SELECT");
             break;
         }
-        printf("}\n");
+        printf(", %d:%d}\n", lexer->current.line, lexer->current.col);
     }
 
     delLexer(lexer);

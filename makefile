@@ -39,9 +39,6 @@ $(TARGETTEST): $(TESTOBJ)
 testing.o: testing/testing.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-echo:
-	echo $(OBJ)
-
 clean:
 	rm -f $(OBJ) $(TESTOBJ) $(TARGET) $(TARGETTEST)
 .PHONY: all clean testing

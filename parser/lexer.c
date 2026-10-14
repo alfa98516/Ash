@@ -2,7 +2,6 @@
 #include "../macros.h"
 #include "token.h"
 #include <ctype.h>
-#include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -31,7 +30,7 @@ struct Lexer* initLexer(const int fd) {
         lexer->f = f;
     }
     lexer->col = 0;
-    lexer->line = 0;
+    lexer->line = 1;
 
     lexer->kw_hm = initHashMap();
     insertHm(lexer->kw_hm, "if\0", (struct _TOKEN){IF, "if\0"});
@@ -56,8 +55,7 @@ struct Lexer* initLexer(const int fd) {
 }
 
 void nextChar(struct Lexer* lexer) {
-    if (lexer->currentChar == EOF)
-        return;
+    if (lexer->currentChar == EOF) return;
     lexer->currentChar = getc(lexer->f);
     if (lexer->currentChar == '\n') {
         lexer->col = -1;
@@ -84,15 +82,13 @@ int peekCharIs(struct Lexer* lexer, char c) {
  */
 uint8_t* identifier(struct Lexer* lexer) {
     if (!isalpha(lexer->currentChar))
-        lexer_error_handler(
-            "Congrats, I have no idea how you managed to get this error.",
-            lexer);
+        lexer_error_handler("Congrats, I have no idea how you managed to get this error.", lexer);
     uint8_t* lexeme = malloc(MAX_ARG_NAME);
     if (!lexeme) {
         lexer_error_handler("Identifier heap allocation did not work", lexer);
     }
 
-    size_t i = 0;                // cry about it
+    size_t i = 0; // cry about it
     while ((isalpha(lexer->currentChar) || isdigit(lexer->currentChar)) &&
            (i < MAX_ARG_NAME)) { // need space for null terminator
 
@@ -122,12 +118,16 @@ void setToken(struct Lexer* lexer, TokenId Ti, int nPairs, ...) {
         struct _TOKEN tok = {.tokenId = Ti};
         tok.lexeme[0] = lexer->currentChar;
         tok.lexeme[1] = '\0';
+        tok.col = lexer->col;
+        tok.line = lexer->line;
         lexer->current = tok;
         nextChar(lexer);
     } else if (lexer->currentChar != EOF) {
         char startChar = lexer->currentChar;
-        nextChar(lexer);
         struct _TOKEN tok = {.tokenId = Ti};
+        tok.col = lexer->col;
+        tok.line = lexer->line;
+        nextChar(lexer);
         tok.lexeme[0] = startChar;
         for (int i = 0; i < nPairs; i++) {
             if (lexer->currentChar == p.c) {
@@ -226,6 +226,8 @@ void nextToken(struct Lexer* lexer) {
         lexer->current.tokenId = LESS;
         memcpy(lexer->current.lexeme, "<\0", 2);
         length = 1;
+        lexer->current.col = lexer->col;
+        lexer->current.line = lexer->line;
         nextChar(lexer);
         if (lexer->currentChar == '<') {
             lexer->current.tokenId = DLESS;
@@ -250,7 +252,6 @@ void nextToken(struct Lexer* lexer) {
             memcpy(lexer->current.lexeme + length, "&\0", 2);
             length++;
         }
-        nextChar(lexer);
         break;
     case '>':
         if (peekCharIs(lexer, '>')) {
@@ -305,18 +306,24 @@ void nextToken(struct Lexer* lexer) {
         break;
     default:
         if (isalpha(lexer->currentChar)) {
+            uint32_t col = lexer->col;
+            uint32_t line = lexer->line;
             ident = identifier(lexer);
             Token t = findHm(lexer->kw_hm, ident);
             if (t.tokenId != ERROR) {
+                t.col = col;
+                t.line = line;
                 lexer->current = t;
             } else {
                 memset(lexer->current.lexeme, 0, 255);
                 memcpy(lexer->current.lexeme, ident, strlen((char*)ident));
-                if (lexer->currentChar == '=') {
+                lexer->current.col = col;
+                lexer->current.line = line;
+                if (lexer->currentChar == '=') { // assignment word.
                     lexer->current.lexeme[strlen((char*)ident)] = '=';
                     nextChar(lexer);
 
-                    if (isalpha(peekChar(lexer))) {
+                    if (isalpha(peekChar(lexer))) { // assignment word of form "word=word"
                         size_t ident_len = strlen((char*)ident);
                         free(ident);
                         ident = identifier(lexer);
@@ -334,7 +341,8 @@ void nextToken(struct Lexer* lexer) {
             free(ident);
         } else if (isdigit(lexer->currentChar)) {
             uint8_t* integer = integer_builder(lexer);
-            struct _TOKEN t = (struct _TOKEN){NUMBER, "\0"};
+
+            struct _TOKEN t = (struct _TOKEN){NUMBER, "\0", lexer->col, lexer->line};
             memcpy(t.lexeme, integer, strlen((char*)integer) + 1);
             lexer->current = t;
             free(integer);
